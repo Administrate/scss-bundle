@@ -279,13 +279,21 @@ export class Bundler {
                 importData.fullPath = underscoredFilePath;
                 importData.found = true;
             } catch (underscoreErr) {
-                // If there are any includePaths
-                if (includePaths.length) {
-                    // Resolve fullPath using its first entry
-                    importData.fullPath = path.resolve(includePaths[0], importData.path);
-                    // Try resolving import with the remaining includePaths
-                    const remainingIncludePaths = includePaths.slice(1);
-                    return this.resolveImport(importData, remainingIncludePaths);
+                const cssFilePath = importData.fullPath.replace(/\.scss/g, '.css');
+                try {
+                    await fs.access(cssFilePath);
+                    importData.fullPath = cssFilePath;
+                    importData.found = true;
+                }
+                catch(cssErr) {
+                    // If there are any includePaths
+                    if (includePaths.length) {
+                        // Resolve fullPath using its first entry
+                        importData.fullPath = path.resolve(includePaths[0], importData.path);
+                        // Try resolving import with the remaining includePaths
+                        const remainingIncludePaths = includePaths.slice(1);
+                        return this.resolveImport(importData, remainingIncludePaths);
+                    }
                 }
             }
         }
