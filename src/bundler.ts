@@ -44,7 +44,7 @@ export class Bundler {
             // Convert string array into regular expressions
             const ignoredImportsRegEx = ignoredImports.map((ignoredImport) => new RegExp(ignoredImport));
 
-            return this._bundle(file, content, dedupeFiles, includePaths, ignoredImportsRegEx);
+            return this._bundle(file, content, dedupeFiles, includePaths, ignoredImportsRegEx, true);
         } catch {
             return {
                 filePath: file,
@@ -61,7 +61,8 @@ export class Bundler {
         content: string,
         dedupeFiles: string[],
         includePaths: string[],
-        ignoredImports: RegExp[]
+        ignoredImports: RegExp[],
+        isEntryFile: boolean
     ): Promise<BundleResult> {
         // Remove commented imports
         content = this.removeImportsFromComments(content);
@@ -148,7 +149,7 @@ export class Bundler {
                         : (this.fileRegistry[imp.fullPath] as string);
 
                 // and bundle it
-                const bundledImport = await this._bundle(imp.fullPath, impContent, dedupeFiles, includePaths, ignoredImports);
+                const bundledImport = await this._bundle(imp.fullPath, impContent, dedupeFiles, includePaths, ignoredImports, false);
 
                 // Then add its bundled content to the registry
                 this.fileRegistry[imp.fullPath] = bundledImport.bundledContent;
@@ -212,7 +213,7 @@ export class Bundler {
         }
 
         // Set result properties
-        bundleResult.bundledContent = this.removeUseAtRules(content);
+        bundleResult.bundledContent = isEntryFile ? content : this.removeUseAtRules(content);
         bundleResult.imports = currentImports;
 
         if (this.importsByFile != null) {

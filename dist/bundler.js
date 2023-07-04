@@ -46,7 +46,7 @@ var Bundler = /** @class */ (function () {
                     case 2:
                         _a = _c.sent(), content = _a[0], dedupeFiles = _a[1];
                         ignoredImportsRegEx = ignoredImports.map(function (ignoredImport) { return new RegExp(ignoredImport); });
-                        return [2 /*return*/, this._bundle(file, content, dedupeFiles, includePaths, ignoredImportsRegEx)];
+                        return [2 /*return*/, this._bundle(file, content, dedupeFiles, includePaths, ignoredImportsRegEx, true)];
                     case 3:
                         _b = _c.sent();
                         return [2 /*return*/, {
@@ -61,7 +61,7 @@ var Bundler = /** @class */ (function () {
     Bundler.prototype.isExtensionExists = function (importName) {
         return ALLOWED_FILE_EXTENSIONS.some(function (extension) { return importName.indexOf(extension) !== -1; });
     };
-    Bundler.prototype._bundle = function (filePath, content, dedupeFiles, includePaths, ignoredImports) {
+    Bundler.prototype._bundle = function (filePath, content, dedupeFiles, includePaths, ignoredImports, isEntryFile) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             var dirname, importsPromises, imports, bundleResult, shouldCheckForDedupes, currentImports, _i, imports_1, imp, contentToReplace, currentImport, impContent, _a, bundledImport, childImports, timesUsed;
             var _this = this;
@@ -149,7 +149,7 @@ var Bundler = /** @class */ (function () {
                         _b.label = 6;
                     case 6:
                         impContent = _a;
-                        return [4 /*yield*/, this._bundle(imp.fullPath, impContent, dedupeFiles, includePaths, ignoredImports)];
+                        return [4 /*yield*/, this._bundle(imp.fullPath, impContent, dedupeFiles, includePaths, ignoredImports, false)];
                     case 7:
                         bundledImport = _b.sent();
                         // Then add its bundled content to the registry
@@ -213,7 +213,7 @@ var Bundler = /** @class */ (function () {
                         return [3 /*break*/, 2];
                     case 11:
                         // Set result properties
-                        bundleResult.bundledContent = this.removeUseAtRules(content);
+                        bundleResult.bundledContent = isEntryFile ? content : this.removeUseAtRules(content);
                         bundleResult.imports = currentImports;
                         if (this.importsByFile != null) {
                             this.importsByFile[filePath] = currentImports;
