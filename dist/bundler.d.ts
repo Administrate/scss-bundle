@@ -12,4 +12,5 @@ export declare class Bundler {
     private removeImportsFromComments;
     private resolveImport;
     private globFilesOrEmpty;
+    private removeUseAtRules;
 }

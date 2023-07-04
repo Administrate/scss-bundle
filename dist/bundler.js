@@ -7,6 +7,7 @@ var path_1 = tslib_1.__importDefault(require("path"));
 var globs_1 = tslib_1.__importDefault(require("globs"));
 var helpers_1 = require("./helpers");
 var IMPORT_PATTERN = /@import\s+['"](.+)['"];/g;
+var USE_AT_RULE_PATTERN = /@use\s+['"](.+)['"];/g;
 var COMMENT_PATTERN = /\/\/.*$/gm;
 var MULTILINE_COMMENT_PATTERN = /\/\*[\s\S]*?\*\//g;
 var DEFAULT_FILE_EXTENSION = ".scss";
@@ -212,7 +213,7 @@ var Bundler = /** @class */ (function () {
                         return [3 /*break*/, 2];
                     case 11:
                         // Set result properties
-                        bundleResult.bundledContent = content;
+                        bundleResult.bundledContent = this.removeUseAtRules(content);
                         bundleResult.imports = currentImports;
                         if (this.importsByFile != null) {
                             this.importsByFile[filePath] = currentImports;
@@ -313,6 +314,9 @@ var Bundler = /** @class */ (function () {
                     })];
             });
         });
+    };
+    Bundler.prototype.removeUseAtRules = function (bundledContent) {
+        return bundledContent.replaceAll(USE_AT_RULE_PATTERN, "");
     };
     return Bundler;
 }());

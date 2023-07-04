@@ -7,6 +7,7 @@ import { matchAll } from "./helpers";
 import { BundleResult, FileRegistry, ImportData } from "./contracts";
 
 const IMPORT_PATTERN = /@import\s+['"](.+)['"];/g;
+const USE_AT_RULE_PATTERN = /@use\s+['"](.+)['"];/g;
 const COMMENT_PATTERN = /\/\/.*$/gm;
 const MULTILINE_COMMENT_PATTERN = /\/\*[\s\S]*?\*\//g;
 const DEFAULT_FILE_EXTENSION = ".scss";
@@ -211,7 +212,7 @@ export class Bundler {
         }
 
         // Set result properties
-        bundleResult.bundledContent = content;
+        bundleResult.bundledContent = this.removeUseAtRules(content);
         bundleResult.imports = currentImports;
 
         if (this.importsByFile != null) {
@@ -290,5 +291,9 @@ export class Bundler {
                 resolve(fullPaths);
             });
         });
+    }
+
+    private removeUseAtRules(bundledContent: string) {
+        return (bundledContent as any).replaceAll(USE_AT_RULE_PATTERN, "");
     }
 }
