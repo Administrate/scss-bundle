@@ -255,7 +255,6 @@ yarn.lock
 
 packages/react-forms-test
 
-dist
 @types
 
 # MacOS
