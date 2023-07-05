@@ -1,5 +1,5 @@
 import path from "path";
-import nodeSass from "sass";
+import nodeSass from "node-sass";
 import { CompilationError } from "../errors/compilation-error";
 
 function sassImporter(projectPath: string): nodeSass.Importer {
