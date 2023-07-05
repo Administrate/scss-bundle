@@ -255,9 +255,7 @@ yarn.lock
 
 packages/react-forms-test
 
-dist
 @types
-package-lock.json
 
 # MacOS
 .DS_Store
